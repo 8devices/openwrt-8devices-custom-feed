@@ -1,0 +1,85 @@
+Index: punica-40fdc0b/CMakeLists.txt
+===================================================================
+--- punica-40fdc0b.orig/CMakeLists.txt
++++ punica-40fdc0b/CMakeLists.txt
+@@ -8,12 +8,7 @@ if(DTLS)
+     message(FATAL_ERROR "DTLS option is not supported." )
+ endif()
+ 
+-set(THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
+-
+-set(ULFIUS_CMAKE_MODULES_DIR "${THIRD_PARTY_DIR}/ulfius/cmake-modules")
+-set(WAKAAMA_SOURCES_DIR "${THIRD_PARTY_DIR}/wakaama/core")
+-set(SHARED_INCLUDE_DIRS "${THIRD_PARTY_DIR}/wakaama/examples/shared")
+-include_directories (${WAKAAMA_SOURCES_DIR} ${SHARED_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
++include_directories (${CMAKE_INSTALL_PREFIX}/include)
+ 
+ execute_process(COMMAND git describe --abbrev=0 --tags OUTPUT_VARIABLE PUNICA_VERSION)
+ 
+@@ -53,39 +48,42 @@ set(GNUTLS_LIBRARIES ${GNUTLS_LIBRARIES}
+ 
+ find_package(OpenSSL REQUIRED)
+ 
+-# Find STATIC libraries
+-set(CMAKE_FIND_LIBRARY_SUFFIXES
+-    ${CMAKE_STATIC_LIBRARY_SUFFIX}
+-    ${CMAKE_SHARED_LIBRARY_SUFFIX}
+-    ${CMAKE_SHARED_MODULE_SUFFIX}
+-    )
+-
+ # Find and link Threads package libraries (pthread on linux)
+ find_package(Threads REQUIRED)
+ # Inform about libraries linked to define Threads and its symbols
+ message("Threads: ${CMAKE_THREAD_LIBS_INIT}")
+ set(LIBRARIES ${LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+ 
+-# Jansson
+-find_package(Jansson REQUIRED)
+-set(LIBRARIES ${LIBRARIES} ${JANSSON_LIBRARIES})
++find_library(MBEDTLS_LIB mbedtls)
++message("MbedTLS: ${MBEDTLS_LIB}")
++set(LIBRARIES ${LIBRARIES} ${MBEDTLS_LIB})
+ 
++# Jansson
++find_library(JANSSON_LIB jansson)
++message("Jansson: ${JANSSON_LIB}")
++set(LIBRARIES ${LIBRARIES} ${JANSSON_LIB})
+ # curl depends on gnutls, (idn2, rtmp, ares, ldap if not built manually)
+-find_package(CURL REQUIRED)
++find_library(CURL_LIB curl)
+ set(CURL_LIBRARIES ${CURL_LIBRARIES} ${GNUTLS_LIBRARIES})
+ 
++find_library(ARGP_LIBRARY argp)
++set(LIBRARIES ${LIBRARIES} ${ARGP_LIBRARY})
++
+ # gcrypt depends on gpg-error
+ find_library(GPG-ERROR_LIBRARY gpg-error)
+ find_library(GCRYPT_LIBRARY gcrypt)
+ set(GCRYPT_LIBRARIES ${GCRYPT_LIBRARY} ${GPG-ERROR_LIBRARY})
+ 
+ # MicroHTTPD depends on gnutls, gcrypt, pthread (libcurl if not built manually)
+-find_package(MHD REQUIRED)
+-set(MHD_LIBRARIES ${MHD_LIBRARIES} ${GNUTLS_LIBRARIES} ${CURL_LIBRARIES} ${GCRYPT_LIBRARIES}  ${CMAKE_THREAD_LIBS_INIT})
++find_library(MHD_LIB microhttpd)
++set(MHD_LIBRARIES ${MHD_LIB} ${GNUTLS_LIBRARIES} ${CURL_LIBRARIES} ${GCRYPT_LIBRARIES}  ${CMAKE_THREAD_LIBS_INIT})
++message("microhttpd: ${MHD_LIBRARIES}")
+ 
+ # Orcania depends on jansson
+-find_package(Orcania REQUIRED)
+-set(ORCANIA_LIBRARIES ${ORCANIA_LIBRARIES} ${ORCANIA_LIBRARIES} ${JANSSON_LIBRARIES})
++find_library(ORCANIA_LIB orcania)
++set(ORCANIA_LIBRARIES ${ORCANIA_LIB} ${ORCANIA_LIBRARIES} ${JANSSON_LIBRARIES})
++message("Orcania: ${ORCANIA_LIBRARIES}")
++
+ find_library(ULFIUS_LIBRARY ulfius)
+ 
+ # Ulfius depends on liborcania, libcurl, jansson, libmicrohttpd > 0.9.51 (libyder if not built manually)
+@@ -113,6 +111,8 @@ target_link_libraries(${PROJECT_NAME} ${
+ 
+ target_compile_options(${PROJECT_NAME} PRIVATE "-Wall")
+ 
++install (TARGETS punica DESTINATION bin)
++
+ if(CODE_COVERAGE)
+     target_compile_options(${PROJECT_NAME} PRIVATE "-coverage")
+     target_link_libraries(${PROJECT_NAME} "gcov")

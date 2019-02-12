@@ -1,0 +1,17 @@
+Index: libwakaama-d8ee899/CMakeLists.txt
+===================================================================
+--- libwakaama-d8ee899.orig/CMakeLists.txt
++++ libwakaama-d8ee899/CMakeLists.txt
+@@ -3,11 +3,10 @@ cmake_minimum_required(VERSION 3.5)
+ project(wakaama C)
+ 
+ set(CMAKE_C_STANDARD 99)
+-set(CMAKE_C_COMPILER "gcc")
+ 
+ set(PROJECT_DESCRIPTION "Wakaama is an implementation of the Open Mobile Alliance's LightWeight M2M protocol (LWM2M).")
+ 
+-set(CMAKE_BUILD_TYPE Release)
++set(CMAKE_BUILD_TYPE MinSizeRel)
+ 
+ # set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib)
+ 

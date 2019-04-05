@@ -18,6 +18,7 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
 CMAKE_OPTIONS+=-DCMAKE_BUILD_TYPE=MinSizeRel
+CMAKE_OPTIONS+=-DPUNICA_VERSION=$(PKG_VERSION)
 
 define Package/punica
   SECTION:=net

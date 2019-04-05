@@ -2,7 +2,7 @@ Index: punica-40fdc0b/CMakeLists.txt
 ===================================================================
 --- punica-40fdc0b.orig/CMakeLists.txt
 +++ punica-40fdc0b/CMakeLists.txt
-@@ -8,12 +8,7 @@ if(DTLS)
+@@ -8,14 +8,7 @@ if(DTLS)
      message(FATAL_ERROR "DTLS option is not supported." )
  endif()
  
@@ -12,11 +12,13 @@ Index: punica-40fdc0b/CMakeLists.txt
 -set(WAKAAMA_SOURCES_DIR "${THIRD_PARTY_DIR}/wakaama/core")
 -set(SHARED_INCLUDE_DIRS "${THIRD_PARTY_DIR}/wakaama/examples/shared")
 -include_directories (${WAKAAMA_SOURCES_DIR} ${SHARED_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
+-
+-execute_process(COMMAND git describe --abbrev=0 --tags OUTPUT_VARIABLE PUNICA_VERSION)
 +include_directories (${CMAKE_INSTALL_PREFIX}/include)
  
- execute_process(COMMAND git describe --abbrev=0 --tags OUTPUT_VARIABLE PUNICA_VERSION)
- 
-@@ -53,39 +48,42 @@ set(GNUTLS_LIBRARIES ${GNUTLS_LIBRARIES}
+ string(REPLACE "\n" "" PUNICA_VERSION ${PUNICA_VERSION})
+ string(REPLACE "v" "" PUNICA_VERSION ${PUNICA_VERSION})
+@@ -53,39 +46,42 @@ set(GNUTLS_LIBRARIES ${GNUTLS_LIBRARIES}
  
  find_package(OpenSSL REQUIRED)
  
@@ -74,7 +76,7 @@ Index: punica-40fdc0b/CMakeLists.txt
  find_library(ULFIUS_LIBRARY ulfius)
  
  # Ulfius depends on liborcania, libcurl, jansson, libmicrohttpd > 0.9.51 (libyder if not built manually)
-@@ -113,6 +111,8 @@ target_link_libraries(${PROJECT_NAME} ${
+@@ -113,6 +109,8 @@ target_link_libraries(${PROJECT_NAME} ${
  
  target_compile_options(${PROJECT_NAME} PRIVATE "-Wall")
  

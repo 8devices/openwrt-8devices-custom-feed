@@ -38,6 +38,9 @@ endef
 define Build/Configure
 endef
 
+define Build/Compile
+endef
+
 define Package/autoconf-archive/install
 	#optional, make host tool installable by selecting Utilities/autoconf-archive in menuconfig
 	$(CP) $(BUILD_DIR_HOST)/$(PKG_SOURCE_SUBDIR)/m4/*.m4 $(STAGING_DIR_HOST)/share/aclocal/

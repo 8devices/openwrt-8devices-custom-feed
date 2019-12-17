@@ -1,10 +1,10 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_SOURCE_VERSION:=40fdc0b
+PKG_SOURCE_VERSION:=02be896
 
 PKG_NAME:=punica
-PKG_VERSION:=2.5.3-$(PKG_SOURCE_VERSION)
+PKG_VERSION:=0.1.0-$(PKG_SOURCE_VERSION)
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -24,7 +24,7 @@ define Package/punica
   SECTION:=net
   CATEGORY:=Network
   TITLE:=punica
-  DEPENDS:=+libmbedtls +libgcrypt +libcurl +jansson +libtasn1 +p11-kit +zlib +libwakaama
+  DEPENDS:=+libmbedtls +libgcrypt +libcurl +jansson +libtasn1 +p11-kit +zlib +libwakaama +libuuid
   URL:=https://github.com/punica/punica.git
 endef
 
